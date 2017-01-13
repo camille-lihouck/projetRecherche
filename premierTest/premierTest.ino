@@ -9,7 +9,6 @@ float pressureThresholdBar = valueToBar(1);
  
 void setup(){
   pinMode(sensorPin,INPUT);
-  analogReference(INTERNAL);
   Serial.begin(9600);
 }
 
