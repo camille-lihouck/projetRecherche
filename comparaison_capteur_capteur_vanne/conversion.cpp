@@ -8,3 +8,7 @@ float valueToBar(int value){
   return valueTokPa(value*0.01);
 }
 
+
+float internalSensorValueTokPa (int value){
+  return value/2.0475 + 101.325;
+}

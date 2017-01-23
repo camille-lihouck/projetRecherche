@@ -58,7 +58,7 @@ void setup(){
 
 void loop(){
   externalSensorValue=analogRead(externalSensorPin);
-  internalSensorValue=getAverageValue(internalSensorPin,20);
+  internalSensorValue=getAverageValue(internalSensorPin,10);
   // Detected value
   previousInternalSensorValue = filteredValue(previousInternalSensorValue, internalSensorValue);
   displayValue();
@@ -90,8 +90,8 @@ void displayThreshold(){
 void displayValue(){
   Serial.print(t);
   Serial.print("  ");
-  Serial.print(previousInternalSensorValue-initialInternalSensorValue);
+  Serial.print(internalSensorValueTokPa(previousInternalSensorValue));
   Serial.print("  ");
-  Serial.print(valueTokPa(externalSensorValue-initialExternalSensorValue));
+  Serial.print(valueTokPa(externalSensorValue));
   Serial.print("\n");
 }

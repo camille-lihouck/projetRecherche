@@ -1,0 +1,29 @@
+Cahier de bord : projet recherche
+
+06/01/2017 : Première aprem
+— Premiers tests avec le capteur de pression et arduino (projet arduino premier test).
+— Conversion de la valeur mesurée par le capteur en une pression en kPa et en Bar.
+— Découverte du fonctionnement de la boucle en contrôle fermée de l’ancien contrôleur de pression (compréhension de l’intérêt du filtre passe bas et de l’AOP).
+— Câblage du filtre passe bas et de l’AOP pour adapter la tension aux bornes du dispositif qui envoie la pression (passage de 5V max en sortie de l’arduino à 10V à l’entrée de l’appareil) et des entrées et sorties de commande.
+
+2éme après midi 09/01:
+- test du circuit d'amplification et diviseur de tension pour le contrôle du distributeur de pression:
+	utilisation d'un potentiomètre pour simuler le signal
+	mesure des tensions de sortie à l'entrée du signal du distributeur, après l'AOP (entre 0.4 et 10.4V) , a la sortie du diviseur de tension (entre 0 et 2.08V) avec des valeurs initiales (entre 0.4 et 5.2V).
+	les valeurs sont conformes aux attentes donc le circuit est bien cablé.
+- instalation de la vanne de régulation de pression electronique numétique dans le circuit (alimentation, consigne d'entrée, sortie, masse) et connection de l'entrée et de la sortie à l'arduino debut d'écriture du programme. Problème absence de modification de pression, chiffre incohérents. Detection d'une erreur d'initialisation de la pin du capteur en output au lieu de input.
+
+3ème après midi 13/01:
+- modification du fichier premier test pour régler le problème output input: on obtient une valeur assez précise de la pression athmosphérique
+- etamage des cables d'alimentation pour une meilleur connexion des dominos a la vanne de régulation de pression
+- branchement de la vanne: pb ne voulait pas s'allumer sans consigne d'entrée. Après un certain temps de reflexion et de vérifications des tensions circulant dans le circuit, et que tout devait fonctionner on essaye d'injecter une consigne pour voir si cela change quelquechose, l'appareil s'allume.
+- tentative de récupération de données afin de détecter l'offset entre le capteur de la vanne et le capteur externe. Gros problème de bruit sur le signal récupéré depuis la vanne. Nécessité de filtrer le signal, travail à faire à la prochaine séance.
+
+4ème après midi 16/01:
+- travail autour du filtrage numérique et matériel.
+- mise en place d'un filtrage IIR sur l'arduino, mais persistance de bruit + retard si filtrage trop fort
+- mise en place d'un filtrage RC passe bas fc=100Hz,avec calcul de R et C, mais persistance de bruit
+- couplage des deux filtrages mais encore du bruit ou beaucoup de retard
+- informations et recherche sur les filtres numérique (IIR) et infos sur le théorème de Shannon
+- pour la prochaine fois: passer le filtrage RC à fc=50Hz en rajoutant une capa en // si cela ne marche pas et que l'on a encore du bruit, possibilité que l'on ai des interférences dues à l'alimentation différentes pour la vanne de régulation(24V) alors que le capteur externe et l'arduino ont la même alim.
+
