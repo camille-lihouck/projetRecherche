@@ -1,7 +1,7 @@
 #include "conversion.h"
 
 float valueTokPa (int value){
-    return value/2.421+3.478;
+    return value/2.421+3.478+2.421;
 }
 
 float valueToBar(int value){

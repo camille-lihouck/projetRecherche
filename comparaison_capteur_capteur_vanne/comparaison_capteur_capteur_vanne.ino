@@ -54,6 +54,7 @@ void setup(){
   initialExternalSensorValue = analogRead(externalSensorPin);
   initialInternalSensorValue = analogRead(internalSensorPin);
   previousInternalSensorValue = initialInternalSensorValue;
+  delay(2*delayT);
 }
 
 void loop(){
