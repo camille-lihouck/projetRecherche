@@ -51,10 +51,10 @@ void setup(){
   //analogReference(EXTERNAL);
   Serial.begin(9600);
   analogWrite(input, inputValue);
+  delay(2*delayT);
   initialExternalSensorValue = analogRead(externalSensorPin);
   initialInternalSensorValue = analogRead(internalSensorPin);
   previousInternalSensorValue = initialInternalSensorValue;
-  delay(2*delayT);
 }
 
 void loop(){
