@@ -26,6 +26,10 @@ int internalSensorValue=0;
 float previousInternalSensorValue=0;
 int initialInternalSensorValue=0;
 
+//
+float internalReference;
+float externalReference;
+
 
 int inputValue = 10;
 
@@ -51,10 +55,19 @@ void setup(){
   //analogReference(EXTERNAL);
   Serial.begin(9600);
   analogWrite(input, inputValue);
-  delay(2*delayT);
+  delay(200);
+  // premières mesures du capteur intraitables
+  initialInternalSensorValue = getAverageValue(internalSensorPin,20);
+  // vraies valeurs initiales
+  initialInternalSensorValue = getAverageValue(internalSensorPin,10);
   initialExternalSensorValue = analogRead(externalSensorPin);
-  initialInternalSensorValue = analogRead(internalSensorPin);
   previousInternalSensorValue = initialInternalSensorValue;
+  internalReference = internalSensorValueTokPa(initialInternalSensorValue);
+  externalReference = valueTokPa(initialExternalSensorValue);
+  Serial.print(internalReference);
+  Serial.print("\n");
+  Serial.print(externalReference);
+  Serial.print("\n");
 }
 
 void loop(){

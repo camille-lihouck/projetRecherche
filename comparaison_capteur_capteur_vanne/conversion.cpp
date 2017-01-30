@@ -1,17 +1,23 @@
 #include "conversion.h"
 
-float initialOffset = 64.06;
+
 float maxOffset = 0.403;
 
 float valueTokPa (int value){
-    return (value/2.421 +3.478)*maxOffset + initialOffset;
+    float res=(value/2.421 +3.478)*maxOffset - 37;
+    if (res<0){
+      return 0;
+    }
+    else{
+      return res;
+    }
 }
 
 float valueToBar(int value){
-  return valueTokPa(value*0.01);
+  return value*0.01;
 }
 
 
 float internalSensorValueTokPa (int value){
-  return value/2.0475 + 101.325;
+  return value/2.0475 ;
 }
