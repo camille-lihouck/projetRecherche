@@ -26,11 +26,11 @@ int internalSensorValue=0;
 float previousInternalSensorValue=0;
 int initialInternalSensorValue=0;
 
-//
+//calibration du zéro mesures initales fiables en kPa
 float internalReference;
 float externalReference;
 
-//
+//valeur brute mesurée avant la comparaison avec la référence
 float curentInternalValue;
 float curentExternalValue;
 
@@ -40,7 +40,7 @@ int inputValue = 10;
 
 //temps t
 int t=0;
-const int delayT = 10;
+const int delayT = 5;
 
 //minimal threshold
 float pressureThresholdkPa = valueTokPa(1);
@@ -60,19 +60,12 @@ void setup(){
   Serial.begin(9600);
   analogWrite(input, inputValue);
   delay(100);
-  // vraies valeurs initiales
-  initialInternalSensorValue = getAverageValue(internalSensorPin,10,100);
-  initialExternalSensorValue = analogRead(externalSensorPin);
-  previousInternalSensorValue = initialInternalSensorValue;
-  internalReference = internalSensorValueTokPa(initialInternalSensorValue);
-  externalReference = valueTokPa(initialExternalSensorValue);
-  curentInternalValue = internalReference;
-  curentExternalValue = externalReference;
   
-  Serial.print(internalReference);
-  Serial.print("\n");
-  Serial.print(externalReference);
-  Serial.print("\n");
+  initialInternalSensorValue = getInitialInternalValue(0.2);
+  initialExternalSensorValue = analogRead(externalSensorPin);
+  
+  initValues();  
+  displayValue();
 }
 
 void loop(){
@@ -85,6 +78,26 @@ void loop(){
   t+=1;
   delay(delayT);
 }
+
+float getInitialInternalValue(float erreur){
+  float tmp1=-42;
+  float tmp2; 
+  tmp2=getAverageValue(internalSensorPin,10,100);
+  while (erreur<abs(tmp1-tmp2)){
+    tmp1=tmp2;
+    tmp2=getAverageValue(internalSensorPin,10,100);
+  }
+  return (tmp1+tmp2)/2;
+}
+  
+void initValues(){
+  previousInternalSensorValue = initialInternalSensorValue;
+  internalReference = internalSensorValueTokPa(initialInternalSensorValue);
+  externalReference = valueTokPa(initialExternalSensorValue);
+  curentInternalValue = internalReference;
+  curentExternalValue = externalReference;
+}
+
 
 float getAverageValue(int pin, int nbMeasures,float t){
   int sum=0;
