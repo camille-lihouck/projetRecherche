@@ -34,9 +34,11 @@ float externalReference;
 float curentInternalValue;
 float curentExternalValue;
 
-
+// Valeur de la commande
 int inputValue = 10;
 
+//precision de l'initialisation souhaitée
+float precision = 0.02;
 
 //temps t
 int t=0;
@@ -61,8 +63,8 @@ void setup(){
   analogWrite(input, inputValue);
   delay(100);
   
-  initialInternalSensorValue = getInitialInternalValue(0.2);
-  initialExternalSensorValue = analogRead(externalSensorPin);
+  initialInternalSensorValue = getInitialValue(internalSensorPin,precision);
+  initialExternalSensorValue = getInitialValue(externalSensorPin,precision);
   
   initValues();  
   displayValue();
@@ -79,13 +81,13 @@ void loop(){
   delay(delayT);
 }
 
-float getInitialInternalValue(float erreur){
+float getInitialValue(int pin, float erreur){
   float tmp1=-42;
   float tmp2; 
-  tmp2=getAverageValue(internalSensorPin,10,100);
+  tmp2=getAverageValue(pin,10,100);
   while (erreur<abs(tmp1-tmp2)){
     tmp1=tmp2;
-    tmp2=getAverageValue(internalSensorPin,10,100);
+    tmp2=getAverageValue(pin,10,100);
   }
   return (tmp1+tmp2)/2;
 }
