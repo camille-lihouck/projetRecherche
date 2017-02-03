@@ -4,7 +4,7 @@
 float maxOffset = 0.403;
 
 float valueTokPa (int value){
-    float res=(value/2.421 +3.478)*maxOffset - 37;
+    float res=(value/2.421 +3.478)*maxOffset*0.96 - 37;
     if (res<0){
       return 0;
     }

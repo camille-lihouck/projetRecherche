@@ -30,6 +30,10 @@ int initialInternalSensorValue=0;
 float internalReference;
 float externalReference;
 
+//
+float curentInternalValue;
+float curentExternalValue;
+
 
 int inputValue = 10;
 
@@ -55,15 +59,16 @@ void setup(){
   //analogReference(EXTERNAL);
   Serial.begin(9600);
   analogWrite(input, inputValue);
-  delay(200);
-  // premières mesures du capteur intraitables
-  initialInternalSensorValue = getAverageValue(internalSensorPin,20);
+  delay(100);
   // vraies valeurs initiales
-  initialInternalSensorValue = getAverageValue(internalSensorPin,10);
+  initialInternalSensorValue = getAverageValue(internalSensorPin,10,100);
   initialExternalSensorValue = analogRead(externalSensorPin);
   previousInternalSensorValue = initialInternalSensorValue;
   internalReference = internalSensorValueTokPa(initialInternalSensorValue);
   externalReference = valueTokPa(initialExternalSensorValue);
+  curentInternalValue = internalReference;
+  curentExternalValue = externalReference;
+  
   Serial.print(internalReference);
   Serial.print("\n");
   Serial.print(externalReference);
@@ -72,22 +77,25 @@ void setup(){
 
 void loop(){
   externalSensorValue=analogRead(externalSensorPin);
-  internalSensorValue=getAverageValue(internalSensorPin,10);
+  internalSensorValue=getAverageValue(internalSensorPin,10,0.02);
   // Detected value
   previousInternalSensorValue = filteredValue(previousInternalSensorValue, internalSensorValue);
+  valuesTokPa();
   displayValue();
   t+=1;
   delay(delayT);
 }
 
-float getAverageValue(int pin, int nbMeasures){
+float getAverageValue(int pin, int nbMeasures,float t){
   int sum=0;
   for (int i=0; i<nbMeasures; i++){
     sum+=analogRead(pin);
-    delay(0.02);
+    delay(t);
   }
   return sum/nbMeasures;
 }
+
+
 
 float filteredValue(int vp,int v){
   return v*alpha + vp*(1-alpha);
@@ -104,8 +112,15 @@ void displayThreshold(){
 void displayValue(){
   Serial.print(t);
   Serial.print("  ");
-  Serial.print(internalSensorValueTokPa(previousInternalSensorValue));
+  Serial.print(curentInternalValue);
   Serial.print("  ");
-  Serial.print(valueTokPa(externalSensorValue));
+  Serial.print(curentExternalValue);
   Serial.print("\n");
+}
+
+void valuesTokPa(){
+  curentInternalValue= internalSensorValueTokPa(previousInternalSensorValue)-internalReference;
+  curentExternalValue = valueTokPa(externalSensorValue) - externalReference;
+  if (curentInternalValue<0) curentInternalValue=0;
+  if (curentExternalValue<0) curentExternalValue=0;
 }
