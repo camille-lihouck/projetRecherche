@@ -8,17 +8,12 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
-
-// ALPHA à tester entre 0.1 et 0.5
-const float alpha = 0.2
-;
-
 //pin of the sensor
 const int externalSensorPin = A0;
 const int input = 3;
 const int internalSensorPin = A2;
 
-//last readen value from the captor
+//readen value from the captor
 int externalSensorValue=0;
 int initialExternalSensorValue=0;
 
@@ -38,7 +33,11 @@ float curentExternalValue;
 int inputValue = 10;
 
 //precision de l'initialisation souhaitée
-float precision = 0.02;
+const float precision = 0.02;
+
+// ratio du filtre 
+const float alpha = 0.2;
+
 
 //temps t
 int t=0;
