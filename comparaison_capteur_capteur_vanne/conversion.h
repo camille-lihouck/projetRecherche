@@ -1,4 +1,5 @@
 float valueTokPa (int);
-float valueToBar (int);
-
+float kPaToBar(float);
+float barTokPa(float);
 float internalSensorValueTokPa (int);
+int inputToPWM (float);

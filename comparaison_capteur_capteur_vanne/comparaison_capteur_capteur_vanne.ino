@@ -29,23 +29,22 @@ float externalReference;
 float curentInternalValue;
 float curentExternalValue;
 
-// Valeur de la commande
-int inputValue = 10;
+// Valeur de la commande en Bar relatif
+float inputValue = 0.1;
 
 //precision de l'initialisation souhaitée
 const float precision = 0.02;
 
 // ratio du filtre 
-const float alpha = 0.2;
+const float alpha = 0.1;
 
 
 //temps t
 int t=0;
-const int delayT = 5;
+const int delayT = 10;
 
 //minimal threshold
 float pressureThresholdkPa = valueTokPa(1);
-float pressureThresholdBar = valueToBar(1);
  
 void setup(){
   TCCR2B = (TCCR2B & 0b11111000) | 0x01;
@@ -57,27 +56,39 @@ void setup(){
   pinMode(externalSensorPin,INPUT);
   pinMode(internalSensorPin,INPUT);
   pinMode(input,OUTPUT);
-  //analogReference(EXTERNAL);
+  
   Serial.begin(9600);
-  analogWrite(input, inputValue);
+  analogWrite(input,3);
   delay(100);
   
   initialInternalSensorValue = getInitialValue(internalSensorPin,precision);
   initialExternalSensorValue = getInitialValue(externalSensorPin,precision);
-  
+ 
+  //analogWrite(input,inputValue);
   initValues();  
-  displayValue();
+  //displayValue();
+  
 }
 
 void loop(){
-  externalSensorValue=analogRead(externalSensorPin);
-  internalSensorValue=getAverageValue(internalSensorPin,10,0.02);
-  // Detected value
-  previousInternalSensorValue = filteredValue(previousInternalSensorValue, internalSensorValue);
+  /*Serial.print(inputValue);
+  Serial.print("  ");
+  Serial.print(analogRead(externalSensorPin));
+  Serial.print("\n");
+  */getValues();
   valuesTokPa();
   displayValue();
   t+=1;
   delay(delayT);
+  if (t==20) analogWrite(input, inputToPWM(inputValue));
+  if (t==250){
+    inputValue=0.2; 
+    analogWrite(input, inputToPWM(inputValue));
+  }
+  if (t==500){ 
+    inputValue=0.3;
+    analogWrite(input, inputToPWM(inputValue));
+  }
 }
 
 float getInitialValue(int pin, float erreur){
@@ -99,6 +110,11 @@ void initValues(){
   curentExternalValue = externalReference;
 }
 
+void getValues(){
+  externalSensorValue=analogRead(externalSensorPin);
+  internalSensorValue=getAverageValue(internalSensorPin,10,0.02);
+  previousInternalSensorValue = filteredValue(previousInternalSensorValue, internalSensorValue);
+}
 
 float getAverageValue(int pin, int nbMeasures,float t){
   int sum=0;
@@ -109,22 +125,14 @@ float getAverageValue(int pin, int nbMeasures,float t){
   return sum/nbMeasures;
 }
 
-
-
 float filteredValue(int vp,int v){
   return v*alpha + vp*(1-alpha);
 }
 
-void displayThreshold(){
-  Serial.print("minimal pressure threshold in kPa : ");
-  Serial.print(pressureThresholdkPa);
-  Serial.print("\nminimal pressure threshold in Bar : ");
-  Serial.print(pressureThresholdBar);
-  Serial.print("\n");
-}
-
 void displayValue(){
   Serial.print(t);
+  Serial.print("  ");
+  Serial.print(barTokPa(inputValue));
   Serial.print("  ");
   Serial.print(curentInternalValue);
   Serial.print("  ");
