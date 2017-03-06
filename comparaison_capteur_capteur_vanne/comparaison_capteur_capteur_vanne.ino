@@ -30,13 +30,13 @@ float curentInternalValue;
 float curentExternalValue;
 
 // Valeur de la commande en Bar relatif
-float inputValue = 0.1;
+float inputValue = 0.15;
 
 //precision de l'initialisation souhaitée
 const float precision = 0.02;
 
 // ratio du filtre 
-const float alpha = 0.1;
+const float alpha = 0.2;
 
 
 //temps t
@@ -81,12 +81,10 @@ void loop(){
   t+=1;
   delay(delayT);
   if (t==20) analogWrite(input, inputToPWM(inputValue));
-  if (t==250){
-    inputValue=0.2; 
-    analogWrite(input, inputToPWM(inputValue));
+  if (t==300){ 
+    analogWrite(input, inputToPWM(0));
   }
-  if (t==500){ 
-    inputValue=0.3;
+  if (t==600){ 
     analogWrite(input, inputToPWM(inputValue));
   }
 }
