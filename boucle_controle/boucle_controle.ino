@@ -34,10 +34,10 @@ const int delayT = 10;
 
 
 // Valeur de la commande en Bar relatif pression desirée
-const float desiredValue = 0.15;
+const float desiredValue = 0.2;
 float inputValue;
 // Gain de la boucle de controle
-const float gain =1.1;
+const float gain =1;
 
 
 void setup(){
