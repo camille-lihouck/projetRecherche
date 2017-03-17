@@ -2,9 +2,9 @@
 
 
 float valueTokPa (int value){
-    float res=(value/2.421 +3.478)*0.96 ;//- 37;
-    //float res = value/2.421 + 3.478;
-    return res;
+  float res=(value/2.421 +3.478)*0.96 ;//- 37;
+  //float res = value/2.421 + 3.478;
+  return res;
 }
 
 float kPaToBar(float value){
@@ -23,5 +23,9 @@ float internalSensorValueTokPa (int value){
 
 // input in bar
 int inputToPWM (float input){
-  return (int)((input+0.05)*255/3);
+  int temp=(input+0.05)*255/3;
+  if (temp>255)
+    temp=255;
+  return(temp);
 }
+

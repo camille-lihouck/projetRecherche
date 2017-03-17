@@ -23,6 +23,10 @@ float externalReference;
 float curentInternalValue;
 float curentExternalValue;
 
+float error;
+float prev_error;
+float integral;
+float derivative;
 
 //precision de l'initialisation souhaitée
 const float precision = 0.02;
@@ -37,8 +41,10 @@ const int delayT = 10;
 const float desiredValue = 0.2;
 float inputValue;
 // Gain de la boucle de controle
-const float gain =1;
-
+const float gain =50;
+const float gainMax=11.1;
+// en milli secondes
+const float periodeOsc =470;
 
 void setup(){
   setHigherMeasureRate();
@@ -59,7 +65,9 @@ void loop(){
 }
 
 void setInputValue(){
-    inputValue= desiredValue-kPaToBar(curentExternalValue);
+    error= desiredValue-kPaToBar(curentExternalValue);
+    inputValue = error;
+    if (inputValue<0) inputValue=0;
     analogWrite(input, inputToPWM(inputValue*gain));
 }
 
@@ -83,6 +91,9 @@ void initValues(){
   
   internalReference = internalSensorValueTokPa(internalSensorValue);
   externalReference = valueTokPa(externalSensorValue);
+  
+  prev_error =0;
+  error = 0;
 }
 
 
@@ -92,7 +103,7 @@ float filteredValue(int vp,int v){
 
 
 float getAverageValue(int pin, int nbMeasures,float t){
-  int sum=0;
+  long int sum=0;
   for (int i=0; i<nbMeasures; i++){
     sum+=analogRead(pin);
     delay(t);
@@ -101,7 +112,7 @@ float getAverageValue(int pin, int nbMeasures,float t){
 }
 
 void getMeasures(){
-  externalSensorValue=analogRead(externalSensorPin);
+  externalSensorValue=filteredValue(externalSensorValue,analogRead(externalSensorPin));
   internalSensorValue=filteredValue(internalSensorValue,getAverageValue(internalSensorPin,10,0.02));
 }
 
